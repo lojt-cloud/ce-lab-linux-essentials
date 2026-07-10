@@ -1,7 +1,7 @@
 # Lab Solution: Linux Command Line Essentials
 **Student Name: Balint Lojt
 **Date: 10/07/2026 
-**Environment Used:**  EC2
+**Environment Used:**  WSL
 
 ---
 
