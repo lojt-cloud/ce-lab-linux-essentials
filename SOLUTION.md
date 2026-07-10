@@ -478,14 +478,14 @@ No
 ---
 
 ## Cleanup Confirmation
-
-- [x] Removed ~/cloud-project directory
-- [x] Removed ~/aws-logs directory
-- [x] Verified no leftover files
+not executed - keeping files to revisit later
+- [] Removed ~/cloud-project directory
+- [] Removed ~/aws-logs directory
+- [] Verified no leftover files
 
 **Cleanup commands:**
+If I didn't keep the files, I would execute these: 
 
-Cleanup command (not executed - keeping files to revisit later):
 cd ~
 rm -rf cloud-project
 rm -rf aws-logs
@@ -498,7 +498,7 @@ rm -rf aws-logs
 |-------|-----------|-----------|-------|
 | Filesystem navigation | 4/5 | 4,5/5 | The basic navigation itself doesn't feel like an issue |
 | File manipulation | 3/5 | 4/5 |Some path confusion (files landing in wrong folders) but self-corrected each time without help |
-| Viewing/searching files | 3/5 | 4/5 |grep + flags with it is understandable can get confusing when using pipes with it |
+| Viewing/searching files | 3/5 | 4/5 |grep + flags with it is understandable, can get confusing when using pipes with it |
 | File permissions | 3/5 | 4/5 |Applied chmod 600/700/750 correctly multiple times, understand the r/w/x math, not just copying numbers |
 | Pipes and redirects | 2/5 | 3/5 | Needed real walkthrough on sort -h vs -n and multi-stage chains, but executed every task correctly once explained - still building intuition here|
 | Process management | 3/5 | 3,5/5 |knows the commands, hasn't yet had to actually use them for their real purpose |
