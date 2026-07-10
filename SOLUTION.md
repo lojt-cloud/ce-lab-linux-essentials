@@ -1,8 +1,7 @@
 # Lab Solution: Linux Command Line Essentials
-
-**Student Name:** ___________________________  
-**Date:** ___________________________  
-**Environment Used:** ☐ EC2 ☐ Local Linux ☐ WSL ☐ macOS ☐ Cloud9
+**Student Name: Balint Lojt
+**Date: 10/07/2026 
+**Environment Used:**  EC2
 
 ---
 
@@ -11,45 +10,41 @@
 ### Connection Information
 
 **Command used to connect:**
-```bash
-_____________________________________________________________
-```
+
+N/A    working with WSL
 
 **Output of `whoami`:**
-```
-_____________________________________________________________
-```
+
+lojtb
 
 **Output of `pwd`:**
-```
-_____________________________________________________________
-```
+
+/home/lojtb/cloud-engineering/ce-lab-linux-essentials
 
 **Output of `uname -a`:**
-```
-_____________________________________________________________
-```
 
----
+Linux LojtLaptop 6.6.114.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Mon Dec  1 20:46:23 UTC 2025 x86_64 GNU/Linux
+
 
 ## Part 2: Navigation Practice
 
 ### Task: Navigate to /var/log and back
 
 **Commands executed:**
-```bash
-# Navigate to /var/log
 
+# Navigate to /var/log
+cd /var/log
 
 # List contents
-
+ls -l
 
 # Return to home directory
+cd ~
 
-```
 
 **Screenshot 1: /var/log directory listing**
-![var/log contents](screenshots/01-var-log.png)
+<img width="1052" height="178" alt="01-var-log" src="https://github.com/user-attachments/assets/81664865-caeb-4e22-87d5-78c9a0db6ad6" />
+
 
 ---
 
@@ -61,28 +56,26 @@ _____________________________________________________________
 ```bash
 # Create cloud-project directory
 
+mkdir cloud-engineering
 
 # Create nested directories
 
-
-
-
-
+mkdir -p cloud-engineering/ce-lab-linux-essentials
 
 
 # Create files
 
-
-
-
+touch README.md
+echo "additional line to README" > README.md
+touch cloud-engineering/ce-lab-linux-essentials/README.md
 
 
 ```
 
 **Screenshot 2: Project structure (tree or ls -R output)**
-![Project structure](screenshots/02-project-structure.png)
+<img width="641" height="117" alt="02-project-structure" src="https://github.com/user-attachments/assets/9dac944e-4a62-4d31-9754-5914cac44370" />
 
----
+
 
 ## Part 4: File Operations
 
@@ -90,44 +83,47 @@ _____________________________________________________________
 
 **Commands for test directory task:**
 ```bash
-# Create test directory with files
 
+# Create test directory with files
+mkdir test-directory
+touch testfile-1 testfile-2 testfile-3 testfile-4 testfile-5
 
 # Make backup copy
-
+cp -r test-directory test-directory-backup
 
 # Rename backup
-
+mv test-directory-backup test-directory-backup-renamed
 
 # Delete backup
-
+rm -r test-directory-backup-renamed
 
 # Verify final state
 
-```
+ls test-directory
+testfile-1  testfile-2  testfile-3  testfile-4  testfile-5
+lojtb@LojtLaptop:~$ ls test-directory-backup-renamed
+ls: cannot access 'test-directory-backup-renamed': No such file or directory
 
 **Screenshot 3: File operations results**
-![File operations](screenshots/03-file-operations.png)
+<img width="783" height="140" alt="03-file-operations" src="https://github.com/user-attachments/assets/2d152872-5790-4326-a44c-752e0e1f4ac6" />
 
----
+
 
 ## Part 5: Viewing File Contents
 
 ### Log File Analysis
 
 **Output of last 3 lines:**
-```
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+
+
+2026-01-14 08:15:30 INFO Backup completed successfully
+2026-01-14 08:20:00 DEBUG Garbage collection triggered
+2026-01-14 08:25:15 INFO Health check: OK
 
 **Command used:**
-```bash
-_____________________________________________________________
-```
 
----
+tail -n 3 app/logs/application.log
+
 
 ## Part 6: Searching with grep
 
@@ -137,31 +133,34 @@ _____________________________________________________________
 ```bash
 # Command:
 
+grep -c "ERROR" app/logs/application.log
+
 # Output:
-_____________________________________________________________
-```
+2
 
 **2. Find WARNING messages with line numbers:**
 ```bash
 # Command:
 
+grep -n "WARNING" app/logs/application.log
+
 # Output:
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+
+5:2026-01-14 08:02:45 WARNING Database connection slow
+11:2026-01-14 08:08:45 WARNING Memory usage at 85%
 
 **3. Extract user login events:**
 ```bash
 # Command:
+grep "login" app/logs/application.log
 
 # Output:
-_____________________________________________________________
-_____________________________________________________________
-```
+2026-01-14 08:01:23 INFO User login: alice@example.com
+2026-01-14 08:03:12 INFO User login: bob@example.com
 
 **Screenshot 4: grep search results**
-![grep results](screenshots/04-grep-results.png)
+<img width="632" height="292" alt="04-grep-results" src="https://github.com/user-attachments/assets/30bbc252-6fbe-4178-b403-b3952e662042" />
+
 
 ---
 
@@ -173,42 +172,44 @@ _____________________________________________________________
 ```bash
 # Create test script
 
+touch test.sh
 
 # Check initial permissions
 
+ls -l test.sh
 
 # Make executable for owner only
 
+chmod 700 test.sh
 
 # Verify permissions
 
-```
+ls -l test.sh
 
-**Initial permissions:** ___________________________
+**Initial permissions:** -rw-r--r-- 1 lojtb lojtb 0 Jul 10 12:34 test.sh
 
-**Final permissions:** ___________________________
+**Final permissions:** -rwx------ 1 lojtb lojtb 0 Jul 10 10:18 test.sh
 
 **Screenshot 5: Permission changes**
-![Permissions](screenshots/05-permissions.png)
+<img width="679" height="101" alt="05-permissions" src="https://github.com/user-attachments/assets/97ec7d5d-7b9d-48dc-b7c8-66dce921d5fa" />
+
 
 ### Secure Backup Script
 
 **Script content:**
-```bash
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+
+#!/bin/bash
+echo "Starting backup..."
+cp -r app app-backup-$(date +%Y%m%d)
+echo "Backup completed."
 
 **Permissions set:**
 ```bash
-# Command:
+# Command:chmod 700 backup.sh
 
 # Result (ls -l):
-_____________________________________________________________
-```
+-rwx------ 1 lojtb lojtb 100 Jul 10 10:30 backup.sh
 
----
 
 ## Part 8: Pipes and Redirects
 
