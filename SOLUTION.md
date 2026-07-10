@@ -218,33 +218,44 @@ echo "Backup completed."
 **1. Count total lines in all .log files:**
 ```bash
 # Command:
-
+find . -name "*.log" -exec wc -l {} +
 # Result:
-_____________________________________________________________
-```
+15 ./app/logs/application.log
+  2 ./test.log
+  1 ./output.log
+  1 ./error.log
+  1 ./combined.log
+ 20 total
 
 **2. Find unique log levels and count:**
 ```bash
 # Command:
-
+cat app/logs/application.log | awk '{print $3}' | sort | uniq -c
 # Result:
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+2 DEBUG
+      2 ERROR
+      9 INFO
+      2 WARNING
 
 **3. List files sorted by size:**
 ```bash
 # Command:
 
+ls -lhS
+
 # Result:
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+
+total 24K
+drwxr-xr-x 5 lojtb lojtb 4.0K Jul 10 10:46 app
+drwxr-xr-x 3 lojtb lojtb 4.0K Jul 10 10:49 scripts
+-rw-r--r-- 1 lojtb lojtb   60 Jul 10 11:18 output.log
+-rw-r--r-- 1 lojtb lojtb   60 Jul 10 11:17 error.log
+-rw-r--r-- 1 lojtb lojtb   60 Jul 10 11:18 combined.log
+-rw-r--r-- 1 lojtb lojtb   24 Jul 10 11:17 test.log
 
 **Screenshot 6: Pipes and redirects output**
-![Pipes output](screenshots/06-pipes-redirects.png)
+<img width="925" height="92" alt="06-pipes-redirects" src="https://github.com/user-attachments/assets/e9795172-8789-4c47-b735-64c602c62ad8" />
+
 
 ---
 
@@ -256,28 +267,32 @@ _____________________________________________________________
 ```bash
 # Command:
 
+sleep 300 &
+
 # Output (job number):
-_____________________________________________________________
-```
+
+[1] 20706
 
 **2. List all jobs:**
 ```bash
 # Command:
 
+ jobs
+
 # Output:
-_____________________________________________________________
-```
+[1]+  Running                    sleep 300 &
 
 **3. Kill the process:**
 ```bash
 # Command:
-
+kill %1
 # Verification:
-_____________________________________________________________
-```
+jobs 
+lojtb@LojtLaptop:~/cloud-project$      (gave back an empty output, which means there are no running tasks)
 
 **Screenshot 7: Process management**
-![Processes](screenshots/07-processes.png)
+<img width="480" height="178" alt="07-processes" src="https://github.com/user-attachments/assets/39fc9d18-ce3c-49d5-bb8f-d3396a677a0d" />
+
 
 ---
 
@@ -289,34 +304,45 @@ _____________________________________________________________
 ```bash
 # Command:
 
+grep -o '"userName":"[^"]*"' ~/aws-logs/cloudtrail.json | sort | uniq -c
+
 # Result:
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+
+ 2 "userName":"alice"
+ 1 "userName":"bob"
+ 2 "userName":"charlie"
 
 **2. EC2 operations:**
 ```bash
 # Command:
 
+grep "EC2" ~/aws-logs/cloudtrail.json
+
 # Result:
-_____________________________________________________________
-_____________________________________________________________
-```
+- RunInstances (by charlie, instance i-1234567890)
+- TerminateInstances (by charlie, instance i-0987654321)
+
+{"eventTime":"2026-01-14T08:15:00Z","eventName":"RunInstances","userIdentity":{"userName":"charlie"},"resources":[{"type":"AWS::EC2::Instance","name":"i-1234567890"}]}
+{"eventTime":"2026-01-14T08:20:00Z","eventName":"TerminateInstances","userIdentity":{"userName":"charlie"},"resources":[{"type":"AWS::EC2::Instance","name":"i-0987654321"}]}
+
+
 
 **3. Unique event types:**
 ```bash
 # Command:
 
+grep -o '"eventName":"[^"]*"' ~/aws-logs/cloudtrail.json | cut -d'"' -f4 | sort | uniq
+
 # Result:
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+CreateBucket
+DeleteBucket
+PutObject
+RunInstances
+TerminateInstances
 
 **Screenshot 8: CloudTrail analysis**
-![CloudTrail](screenshots/08-cloudtrail-analysis.png)
+<img width="1104" height="336" alt="08-cloudtrail-analysis" src="https://github.com/user-attachments/assets/fee8e32e-0b5b-4f09-8fc6-040c0f958b23" />
+
 
 ### System Monitoring
 
@@ -324,31 +350,42 @@ _____________________________________________________________
 ```bash
 # Command: df -h
 
-# Total space: _______________ 
-# Used: _______________
-# Available: _______________
-# Usage %: _______________%
+It gave back too many lines, and I found it hard to dig out what I needed to find, so I looked up how to narrow it down.
+df -h /
+The "/" narrows down to only show me the filesystem containing this specific path. 
+
+# Total space:1007G
+# Used: 2.5G
+# Available: 954G
+# Usage %: 1%
 ```
 
 **2. Available memory:**
 ```bash
 # Command: free -h
 
-# Total: _______________
-# Used: _______________
-# Free: _______________
+
+# Total: 7.6Gi 
+# Used: 674Mi
+# Free: 6.8Gi
 ```
 
 **3. CPU cores:**
 ```bash
 # Command: lscpu
 
-# CPU(s): _______________
-# Model: _______________
+Again, as before, I had too many lines, so I found an easier piped option:
+lscpu | grep -E "^CPU\(s\)|Model name"
+
+What it does: Show me any line that starts with CPU(s), or any line that contains Model name, anywhere in the file.
+This one feels over my level for now, but in the future, I can see the use of it.
+# CPU(s): 12
+# Model: 12th Gen Intel(R) Core(TM) i5-1245U
 ```
 
 **Screenshot 9: System resources**
-![System resources](screenshots/09-system-resources.png)
+<img width="894" height="242" alt="09-system-resources" src="https://github.com/user-attachments/assets/c1a075d3-42ae-4f7d-8188-d6ad4156a5ce" />
+
 
 ---
 
@@ -356,16 +393,16 @@ _____________________________________________________________
 
 **List your 10 most-used commands from this lab:**
 
-1. _______________________________________________
-2. _______________________________________________
-3. _______________________________________________
-4. _______________________________________________
-5. _______________________________________________
-6. _______________________________________________
-7. _______________________________________________
-8. _______________________________________________
-9. _______________________________________________
-10. _______________________________________________
+1. ls -l / ls -la / ls -lh (for listing files with different details)
+2. cd / pwd (moving around in directories + checking where I am)
+3. mkdir -p (to create directories with a nested path)
+4. cat (puts out what's inside a file)
+5. grep (specific search inside files with different criteria (-n,-c,-o))
+6. chmod (changing the permissions of who can do what, and it is important for security)
+7. cp / mv / rm  (to copy files, move, remove depending on what follows (-r))
+8. | (pipe is to chain commands together)
+9. sort / uniq -c (the counting/deduplication pattern for analysing logs and lists)
+10. ps aux / jobs / kill (process management, right now didn't do much for me because I haven't used it in actual services)
 
 ---
 
@@ -373,56 +410,62 @@ _____________________________________________________________
 
 ### 1. How do file permissions enhance security in cloud environments?
 
-**Your answer:**
-```
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+File permissions enhance security by only letting the people who actually 
+need access get it, and locking everyone else out - same idea as least
+privilege in IAM. I did this today with a config file holding a database
+password, setting it to chmod 600 so only the owner could read or write it,
+nobody else on the system could touch it at all.
+
+Without that, sensitive stuff like passwords or scripts could be read or
+messed with by any other user on the system, which is a real risk on shared
+servers or cloud instances.
 
 ### 2. Why is piping commands together more efficient than intermediate files?
 
-**Your answer:**
-```
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+Piping skips having to save each step's output to a temporary file just to
+feed it into the next command. Without pipes, I'd have to run grep, save the
+result to a file, then run wc -l on that file, then remember to delete the
+leftover file after. With a pipe, the output of one command goes straight
+into the next one in memory, no extra files created or cleaned up.
+
+It also lets me chain simple commands together to get a result none of them
+could produce alone. like counting the most common log level in one line
+instead of several separate steps.
 
 ### 3. Describe a real-world scenario where you'd use `tail -f`.
 
-**Your answer:**
-```
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+tail -f is for watching a log file live, as new lines get added, instead of
+just checking a snapshot once. A real scenario: if I'm deploying a new app
+version, I'd run tail -f on the application log so I can watch for errors
+the moment they happen, rather than manually re-checking the file over and
+over to see if something new shows up.
 
 ### 4. What's the difference between killing with `kill` vs `kill -9`?
 
-**Your answer:**
-```
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+The plain "kill" command sends a request to stop the running process, but it
+doesn't stop it immediately - it finishes up what it's doing first, cleaning
+everything up (closing open files, saving data) before closing. "kill -9"
+forcefully closes everything without any saving, instantly killing it. "-9"
+is a dangerous command, so I'd only use it as a last resort if the normal
+kill command doesn't work.
 
 ### 5. How does Linux CLI proficiency help with AWS CLI usage?
 
-**Your answer:**
-```
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-_____________________________________________________________
-```
+AWS CLI's syntax and behaviour are built around Linux/Unix conventions - flags,
+piping output into other tools like grep, redirecting output to files, etc.
+So the skills transfer directly: knowing how to navigate, search, and chain
+commands on Linux makes AWS CLI feel familiar rather than like learning a
+whole new way of working.
 
----
+Also, the vast majority of servers (and most cloud infrastructure) run on
+Linux, so this isn't just about AWS CLI specifically - it's a foundational
+skill for basically anything in cloud/DevOps work.
+
 
 ## Troubleshooting Log
 
-**Did you encounter any issues?** (Yes/No): ______
+**Did you encounter any issues?** 
+No
 
 **If yes, document:**
 
@@ -436,17 +479,16 @@ _____________________________________________________________
 
 ## Cleanup Confirmation
 
-- [ ] Removed ~/cloud-project directory
-- [ ] Removed ~/aws-logs directory
-- [ ] Verified no leftover files
+- [x] Removed ~/cloud-project directory
+- [x] Removed ~/aws-logs directory
+- [x] Verified no leftover files
 
 **Cleanup commands:**
-```bash
-_____________________________________________________________
-_____________________________________________________________
-```
 
----
+Cleanup command (not executed - keeping files to revisit later):
+cd ~
+rm -rf cloud-project
+rm -rf aws-logs
 
 ## Self-Assessment
 
@@ -454,18 +496,18 @@ _____________________________________________________________
 
 | Skill | Before Lab | After Lab | Notes |
 |-------|-----------|-----------|-------|
-| Filesystem navigation | ___/5 | ___/5 | |
-| File manipulation | ___/5 | ___/5 | |
-| Viewing/searching files | ___/5 | ___/5 | |
-| File permissions | ___/5 | ___/5 | |
-| Pipes and redirects | ___/5 | ___/5 | |
-| Process management | ___/5 | ___/5 | |
-| Log analysis | ___/5 | ___/5 | |
+| Filesystem navigation | 4/5 | 4,5/5 | The basic navigation itself doesn't feel like an issue |
+| File manipulation | 3/5 | 4/5 |Some path confusion (files landing in wrong folders) but self-corrected each time without help |
+| Viewing/searching files | 3/5 | 4/5 |grep + flags with it is understandable can get confusing when using pipes with it |
+| File permissions | 3/5 | 4/5 |Applied chmod 600/700/750 correctly multiple times, understand the r/w/x math, not just copying numbers |
+| Pipes and redirects | 2/5 | 3/5 | Needed real walkthrough on sort -h vs -n and multi-stage chains, but executed every task correctly once explained - still building intuition here|
+| Process management | 3/5 | 3,5/5 |knows the commands, hasn't yet had to actually use them for their real purpose |
+| Log analysis | 2/5 | 3/5 |CloudTrail JSON extraction with grep -o worked correctly, understood what each piece of the pattern was doing  |
 
 ---
 
 ## Bonus Challenges Completed
-
+N/A
 - [ ] Explored `awk` for text processing
 - [ ] Created a shell script with multiple commands
 - [ ] Used `find` with complex criteria
