@@ -56,12 +56,12 @@ cd ~
 ```bash
 # Create cloud-project directory
 
-mkdir cloud-engineering
+mkdir cloud-project
 
 # Create nested directories
 
-mkdir -p cloud-engineering/ce-lab-linux-essentials
-
+mkdir -p app/config app/logs app/data
+mkdir -p scripts/deployment scripts/monitoring
 
 # Create files
 
@@ -85,6 +85,7 @@ touch cloud-engineering/ce-lab-linux-essentials/README.md
 ```bash
 
 # Create test directory with files
+
 mkdir test-directory
 touch testfile-1 testfile-2 testfile-3 testfile-4 testfile-5
 
