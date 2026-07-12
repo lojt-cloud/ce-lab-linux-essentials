@@ -465,18 +465,18 @@ skill for basically anything in cloud/DevOps work.
 
 ## Troubleshooting Log
 
-**Did you encounter any issues?** 
-No
+Yes
 
 **If yes, document:**
 
-| Issue | Commands Tried | Solution | Time Spent |
-|-------|---------------|----------|------------|
-|       |               |          |            |
-|       |               |          |            |
-|       |               |          |            |
+Issue:
+Tried to create the log file at app/logs/application.log, but got "No such file or directory"
 
----
+commands tried:
+cat > app/logs/application.log << 'EOF' ...
+
+Realised the app/logs directory didn't exist yet - ran mkdir -p app/logs first, then the file creation worked.
+Took about 3 min to figure out and fix it.
 
 ## Cleanup Confirmation
 not executed - keeping files to revisit later
